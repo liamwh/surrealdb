@@ -424,9 +424,11 @@ where
 	T: DeserializeOwned + std::fmt::Debug,
 {
 	let surreal_json = into_json(value.clone(), false);
+	let surreal_json_simplified = into_json(value.clone(), true);
 	let serde_json = json!(value.clone());
 	tracing::info!(?value);
 	tracing::info!(?surreal_json);
+	tracing::info!(?surreal_json_simplified);
 	tracing::info!(?serde_json);
 	serde_json::from_value(surreal_json).map_err(|error| Error::FromValue {
 		value,
