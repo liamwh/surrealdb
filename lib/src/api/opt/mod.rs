@@ -423,7 +423,7 @@ pub(crate) fn from_value<T>(value: Value) -> Result<T, Error>
 where
 	T: DeserializeOwned + std::fmt::Debug,
 {
-	let surreal_json = into_json(value.clone(), true);
+	let surreal_json = into_json(value.clone(), false);
 	let serde_json = json!(value.clone());
 	tracing::info!(?value);
 	tracing::info!(?surreal_json);
