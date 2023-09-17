@@ -77,7 +77,7 @@ impl Strand {
 
 impl Display for Strand {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-		Display::fmt(&quote_str(&self.0), f)
+		Display::fmt(&self.0, f)
 	}
 }
 

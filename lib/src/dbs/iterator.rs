@@ -138,6 +138,7 @@ impl Iterator {
 							Value::Thing(id) if id == v => (),
 							// The id is a match, so don't error
 							// The id does not match
+							Value::Strand(id) if id.to_string() == v.to_string() => (),
 							id => {
 								return Err(Error::IdMismatch2 {
 									value: id.to_string(),
