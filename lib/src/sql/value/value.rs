@@ -2575,6 +2575,7 @@ impl Value {
 	/// Process this type returning a computed simple Value
 	#[cfg_attr(not(target_arch = "wasm32"), async_recursion)]
 	#[cfg_attr(target_arch = "wasm32", async_recursion(?Send))]
+	#[tracing::instrument(ret, err)]
 	pub(crate) async fn compute(
 		&self,
 		ctx: &Context<'_>,

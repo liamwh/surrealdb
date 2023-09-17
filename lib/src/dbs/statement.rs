@@ -125,6 +125,7 @@ impl<'a> Statement<'a> {
 	}
 	/// Returns any SET clause if specified
 	#[inline]
+	#[tracing::instrument(ret)]
 	pub fn data(&self) -> Option<&Data> {
 		match self {
 			Statement::Create(v) => v.data.as_ref(),

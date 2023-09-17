@@ -38,6 +38,7 @@ impl CreateStatement {
 		true
 	}
 	/// Process this type returning a computed simple Value
+	#[tracing::instrument(skip(doc))]
 	pub(crate) async fn compute(
 		&self,
 		ctx: &Context<'_>,

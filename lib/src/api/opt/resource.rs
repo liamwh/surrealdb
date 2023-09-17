@@ -27,6 +27,7 @@ pub enum Resource {
 }
 
 impl Resource {
+	#[tracing::instrument(ret, err)]
 	pub(crate) fn with_range(self, range: Range<Id>) -> Result<Value> {
 		match self {
 			Resource::Table(Table(table)) => Ok(sql::Range {

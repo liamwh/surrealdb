@@ -107,6 +107,7 @@ impl fmt::Display for Thing {
 
 impl Thing {
 	/// Process this type returning a computed simple Value
+	#[tracing::instrument(ret, err)]
 	pub(crate) async fn compute(
 		&self,
 		ctx: &Context<'_>,

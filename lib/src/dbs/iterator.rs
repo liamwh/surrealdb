@@ -23,6 +23,7 @@ use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::mem;
 
+#[derive(Debug)]
 pub(crate) enum Iterable {
 	Value(Value),
 	Table(Table),
@@ -53,7 +54,7 @@ pub(crate) enum Workable {
 	Relate(Thing, Thing),
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub(crate) struct Iterator {
 	// Iterator status
 	run: Canceller,
@@ -82,6 +83,7 @@ impl Iterator {
 	}
 
 	/// Prepares a value for processing
+	#[tracing::instrument(ret, err)]
 	pub async fn prepare(
 		&mut self,
 		ctx: &Context<'_>,
@@ -123,14 +125,18 @@ impl Iterator {
 			},
 			Value::Thing(v) => {
 				// Check if there is a data clause
+				tracing::info!(?v);
 				if let Some(data) = stm.data() {
+					tracing::info!(?data);
 					// Check if there is an id field specified
 					if let Some(id) = data.rid(ctx, opt, txn).await? {
 						// Check to see the type of the id
-						dbg!(&id);
+						tracing::info!(?id);
+						tracing::info!("{}", &id.to_string());
+						tracing::info!("{}", &v.to_string());
 						match id {
-							// The id is a match, so don't error
 							Value::Thing(id) if id == v => (),
+							// The id is a match, so don't error
 							// The id does not match
 							id => {
 								return Err(Error::IdMismatch2 {

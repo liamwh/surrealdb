@@ -1,7 +1,7 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Canceller {
 	/// A reference to the canceled value of a context.
 	cancelled: Arc<AtomicBool>,

@@ -25,6 +25,7 @@ pub(crate) struct Document<'a> {
 	pub(super) current: CursorDoc<'a>,
 }
 
+#[derive(Debug)]
 pub struct CursorDoc<'a> {
 	pub(crate) ir: Option<IteratorRef>,
 	pub(crate) rid: Option<&'a Thing>,

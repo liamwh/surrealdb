@@ -40,6 +40,7 @@ impl Default for Data {
 
 impl Data {
 	/// Fetch the 'id' field if one has been specified
+	#[tracing::instrument(ret, err)]
 	pub(crate) async fn rid(
 		&self,
 		ctx: &Context<'_>,
