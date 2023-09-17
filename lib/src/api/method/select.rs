@@ -57,7 +57,7 @@ where
 impl<'r, Client, R> IntoFuture for Select<'r, Client, Option<R>>
 where
 	Client: Connection,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<Option<R>>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;
@@ -68,7 +68,7 @@ where
 impl<'r, Client, R> IntoFuture for Select<'r, Client, Vec<R>>
 where
 	Client: Connection,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<Vec<R>>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;

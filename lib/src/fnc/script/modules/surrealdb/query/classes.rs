@@ -25,6 +25,7 @@ impl QueryVariables {
 		QueryVariables(BTreeMap::new())
 	}
 
+	#[tracing::instrument(ret, err)]
 	pub fn from_value<'js>(ctx: &Ctx<'js>, val: Value<'js>) -> Result<Self> {
 		static INVALID_ERROR: &str = "Query argument was neither sequence<[String,SurValue]> or record<ByteString, SurValue>";
 		let mut res = Self::new();

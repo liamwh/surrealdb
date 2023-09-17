@@ -3,6 +3,7 @@ use crate::sql::operation::Operation;
 use crate::sql::value::Value;
 
 impl Value {
+	#[tracing::instrument(ret, err)]
 	pub(crate) fn patch(&mut self, ops: Value) -> Result<(), Error> {
 		// This value is for test operation, value itself shouldn't change until all operations done.
 		// If test operations fails, nothing in value will be changed.

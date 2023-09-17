@@ -212,13 +212,14 @@ pub trait Connection: Sized + Send + Sync + 'static {
 	}
 
 	/// Execute all methods except `query`
+	#[tracing::instrument(skip(self, router), ret, err)]
 	fn execute<'r, R>(
 		&'r mut self,
 		router: &'r Router<Self>,
 		param: Param,
 	) -> Pin<Box<dyn Future<Output = Result<R>> + Send + Sync + 'r>>
 	where
-		R: DeserializeOwned,
+		R: DeserializeOwned + std::fmt::Debug,
 		Self: api::Connection,
 	{
 		Box::pin(async move {
@@ -229,13 +230,14 @@ pub trait Connection: Sized + Send + Sync + 'static {
 	}
 
 	/// Execute methods that return an optional single response
+	#[tracing::instrument(skip(self, router), ret, err)]
 	fn execute_opt<'r, R>(
 		&'r mut self,
 		router: &'r Router<Self>,
 		param: Param,
 	) -> Pin<Box<dyn Future<Output = Result<Option<R>>> + Send + Sync + 'r>>
 	where
-		R: DeserializeOwned,
+		R: DeserializeOwned + std::fmt::Debug,
 		Self: api::Connection,
 	{
 		Box::pin(async move {
@@ -248,13 +250,14 @@ pub trait Connection: Sized + Send + Sync + 'static {
 	}
 
 	/// Execute methods that return multiple responses
+	#[tracing::instrument(skip(self, router), ret, err)]
 	fn execute_vec<'r, R>(
 		&'r mut self,
 		router: &'r Router<Self>,
 		param: Param,
 	) -> Pin<Box<dyn Future<Output = Result<Vec<R>>> + Send + Sync + 'r>>
 	where
-		R: DeserializeOwned,
+		R: DeserializeOwned + std::fmt::Debug,
 		Self: api::Connection,
 	{
 		Box::pin(async move {
@@ -269,6 +272,7 @@ pub trait Connection: Sized + Send + Sync + 'static {
 	}
 
 	/// Execute methods that return nothing
+	#[tracing::instrument(skip(self, router), ret, err)]
 	fn execute_unit<'r>(
 		&'r mut self,
 		router: &'r Router<Self>,
@@ -292,6 +296,7 @@ pub trait Connection: Sized + Send + Sync + 'static {
 	}
 
 	/// Execute methods that return a raw value
+	#[tracing::instrument(skip(self, router), ret, err)]
 	fn execute_value<'r>(
 		&'r mut self,
 		router: &'r Router<Self>,
@@ -307,6 +312,7 @@ pub trait Connection: Sized + Send + Sync + 'static {
 	}
 
 	/// Execute the `query` method
+	#[tracing::instrument(skip(self, router), ret, err)]
 	fn execute_query<'r>(
 		&'r mut self,
 		router: &'r Router<Self>,

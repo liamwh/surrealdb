@@ -18,6 +18,7 @@ pub trait IntoQuery {
 }
 
 impl IntoQuery for sql::Query {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		let sql::Query(Statements(statements)) = self;
 		Ok(statements)
@@ -25,6 +26,7 @@ impl IntoQuery for sql::Query {
 }
 
 impl IntoQuery for Statements {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		let Statements(statements) = self;
 		Ok(statements)
@@ -32,138 +34,161 @@ impl IntoQuery for Statements {
 }
 
 impl IntoQuery for Vec<Statement> {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(self)
 	}
 }
 
 impl IntoQuery for Statement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![self])
 	}
 }
 
 impl IntoQuery for UseStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Use(self)])
 	}
 }
 
 impl IntoQuery for SetStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Set(self)])
 	}
 }
 
 impl IntoQuery for InfoStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Info(self)])
 	}
 }
 
 impl IntoQuery for LiveStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Live(self)])
 	}
 }
 
 impl IntoQuery for KillStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Kill(self)])
 	}
 }
 
 impl IntoQuery for BeginStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Begin(self)])
 	}
 }
 
 impl IntoQuery for CancelStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Cancel(self)])
 	}
 }
 
 impl IntoQuery for CommitStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Commit(self)])
 	}
 }
 
 impl IntoQuery for OutputStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Output(self)])
 	}
 }
 
 impl IntoQuery for IfelseStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Ifelse(self)])
 	}
 }
 
 impl IntoQuery for SelectStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Select(self)])
 	}
 }
 
 impl IntoQuery for CreateStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Create(self)])
 	}
 }
 
 impl IntoQuery for UpdateStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Update(self)])
 	}
 }
 
 impl IntoQuery for RelateStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Relate(self)])
 	}
 }
 
 impl IntoQuery for DeleteStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Delete(self)])
 	}
 }
 
 impl IntoQuery for InsertStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Insert(self)])
 	}
 }
 
 impl IntoQuery for DefineStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Define(self)])
 	}
 }
 
 impl IntoQuery for RemoveStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Remove(self)])
 	}
 }
 
 impl IntoQuery for OptionStatement {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		Ok(vec![Statement::Option(self)])
 	}
 }
 
 impl IntoQuery for &str {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		sql::parse(self)?.into_query()
 	}
 }
 
 impl IntoQuery for &String {
+	#[tracing::instrument(ret, err)]
 	fn into_query(self) -> Result<Vec<Statement>> {
 		sql::parse(self)?.into_query()
 	}
@@ -185,6 +210,7 @@ where
 }
 
 impl QueryResult<Value> for usize {
+	#[tracing::instrument(ret, err)]
 	fn query_result(self, QueryResponse(map): &mut QueryResponse) -> Result<Value> {
 		match map.remove(&self) {
 			Some(result) => Ok(result?.into()),
@@ -195,8 +221,9 @@ impl QueryResult<Value> for usize {
 
 impl<T> QueryResult<Option<T>> for usize
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
+	#[tracing::instrument(ret, err)]
 	fn query_result(self, QueryResponse(map): &mut QueryResponse) -> Result<Option<T>> {
 		let vec = match map.get_mut(&self) {
 			Some(result) => match result {
@@ -225,6 +252,7 @@ where
 }
 
 impl QueryResult<Value> for (usize, &str) {
+	#[tracing::instrument(ret, err)]
 	fn query_result(self, QueryResponse(map): &mut QueryResponse) -> Result<Value> {
 		let (index, key) = self;
 		let response = match map.get_mut(&index) {
@@ -254,8 +282,9 @@ impl QueryResult<Value> for (usize, &str) {
 
 impl<T> QueryResult<Option<T>> for (usize, &str)
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
+	#[tracing::instrument(ret, err)]
 	fn query_result(self, QueryResponse(map): &mut QueryResponse) -> Result<Option<T>> {
 		let (index, key) = self;
 		let vec = match map.get_mut(&index) {
@@ -303,7 +332,7 @@ where
 
 impl<T> QueryResult<Vec<T>> for usize
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
 	fn query_result(self, QueryResponse(map): &mut QueryResponse) -> Result<Vec<T>> {
 		let vec = match map.remove(&self) {
@@ -318,7 +347,7 @@ where
 
 impl<T> QueryResult<Vec<T>> for (usize, &str)
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
 	fn query_result(self, QueryResponse(map): &mut QueryResponse) -> Result<Vec<T>> {
 		let (index, key) = self;
@@ -355,7 +384,7 @@ impl QueryResult<Value> for &str {
 
 impl<T> QueryResult<Option<T>> for &str
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
 	fn query_result(self, response: &mut QueryResponse) -> Result<Option<T>> {
 		(0, self).query_result(response)
@@ -364,7 +393,7 @@ where
 
 impl<T> QueryResult<Vec<T>> for &str
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
 	fn query_result(self, response: &mut QueryResponse) -> Result<Vec<T>> {
 		(0, self).query_result(response)

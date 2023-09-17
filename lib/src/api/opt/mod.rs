@@ -151,6 +151,7 @@ impl From<Value> for serde_json::Value {
 	}
 }
 
+#[tracing::instrument(ret)]
 fn into_json(value: Value, simplify: bool) -> JsonValue {
 	use crate::sql;
 	use crate::sql::Number;
@@ -417,11 +418,14 @@ fn into_json(value: Value, simplify: bool) -> JsonValue {
 }
 
 /// Deserializes a value `T` from `SurrealDB` [`Value`]
+#[tracing::instrument(ret, err)]
 pub(crate) fn from_value<T>(value: Value) -> Result<T, Error>
 where
-	T: DeserializeOwned,
+	T: DeserializeOwned + std::fmt::Debug,
 {
 	let json = into_json(value.clone(), false);
+	tracing::info!(?value);
+	tracing::info!(?json);
 	serde_json::from_value(json).map_err(|error| Error::FromValue {
 		value,
 		error: error.to_string(),

@@ -64,7 +64,7 @@ impl<'r, Client, D, R> IntoFuture for Merge<'r, Client, D, Option<R>>
 where
 	Client: Connection,
 	D: Serialize,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<Option<R>>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;
@@ -76,7 +76,7 @@ impl<'r, Client, D, R> IntoFuture for Merge<'r, Client, D, Vec<R>>
 where
 	Client: Connection,
 	D: Serialize,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<Vec<R>>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;

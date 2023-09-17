@@ -22,7 +22,7 @@ pub struct Signin<'r, C: Connection, R> {
 impl<'r, Client, R> IntoFuture for Signin<'r, Client, R>
 where
 	Client: Connection,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<R>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;

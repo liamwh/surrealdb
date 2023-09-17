@@ -618,7 +618,8 @@ where
 	/// # Ok(())
 	/// # }
 	/// ```
-	pub fn query(&self, query: impl opt::IntoQuery) -> Query<C> {
+	#[tracing::instrument(skip(self))]
+	pub fn query(&self, query: impl opt::IntoQuery + std::fmt::Debug) -> Query<C> {
 		Query {
 			router: self.router.extract(),
 			query: vec![query.into_query()],
@@ -650,7 +651,8 @@ where
 	/// # Ok(())
 	/// # }
 	/// ```
-	pub fn select<R>(&self, resource: impl opt::IntoResource<R>) -> Select<C, R> {
+	#[tracing::instrument(skip(self))]
+	pub fn select<R>(&self, resource: impl opt::IntoResource<R> + std::fmt::Debug) -> Select<C, R> {
 		Select {
 			router: self.router.extract(),
 			resource: resource.into_resource(),

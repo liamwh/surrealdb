@@ -62,7 +62,7 @@ where
 impl<'r, Client, R> IntoFuture for Update<'r, Client, Option<R>>
 where
 	Client: Connection,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<Option<R>>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;
@@ -73,7 +73,7 @@ where
 impl<'r, Client, R> IntoFuture for Update<'r, Client, Vec<R>>
 where
 	Client: Connection,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	type Output = Result<Vec<R>>;
 	type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send + Sync + 'r>>;
@@ -106,7 +106,7 @@ where
 impl<'r, C, R> Update<'r, C, R>
 where
 	C: Connection,
-	R: DeserializeOwned,
+	R: DeserializeOwned + std::fmt::Debug,
 {
 	/// Replaces the current document / record data with the specified data
 	pub fn content<D>(self, data: D) -> Content<'r, C, D, R>

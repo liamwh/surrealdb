@@ -128,24 +128,28 @@ pub trait IntoResource<Response>: Sized {
 }
 
 impl IntoResource<Value> for Resource {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(self)
 	}
 }
 
 impl<R> IntoResource<Option<R>> for Object {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(Resource::Object(self))
 	}
 }
 
 impl<R> IntoResource<Option<R>> for Thing {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(Resource::RecordId(self))
 	}
 }
 
 impl<R> IntoResource<Option<R>> for &Thing {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(Resource::RecordId(self.clone()))
 	}
@@ -153,9 +157,10 @@ impl<R> IntoResource<Option<R>> for &Thing {
 
 impl<R, T, I> IntoResource<Option<R>> for (T, I)
 where
-	T: Into<String>,
-	I: Into<Id>,
+	T: Into<String> + std::fmt::Debug,
+	I: Into<Id> + std::fmt::Debug,
 {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		let (table, id) = self;
 		let record_id = (table.into(), id.into());
@@ -164,18 +169,21 @@ where
 }
 
 impl<R> IntoResource<Vec<R>> for Array {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(Resource::Array(self))
 	}
 }
 
 impl<R> IntoResource<Vec<R>> for Edges {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(Resource::Edges(self))
 	}
 }
 
 impl<R> IntoResource<Vec<R>> for Table {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		Ok(Resource::Table(self))
 	}
@@ -197,6 +205,7 @@ fn blacklist_colon(input: &str) -> Result<()> {
 }
 
 impl<R> IntoResource<Vec<R>> for &str {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		blacklist_colon(self)?;
 		Ok(Resource::Table(Table(self.to_owned())))
@@ -204,6 +213,7 @@ impl<R> IntoResource<Vec<R>> for &str {
 }
 
 impl<R> IntoResource<Vec<R>> for &String {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		blacklist_colon(self)?;
 		Ok(Resource::Table(Table(self.to_owned())))
@@ -211,6 +221,7 @@ impl<R> IntoResource<Vec<R>> for &String {
 }
 
 impl<R> IntoResource<Vec<R>> for String {
+	#[tracing::instrument(ret, err)]
 	fn into_resource(self) -> Result<Resource> {
 		blacklist_colon(&self)?;
 		Ok(Resource::Table(Table(self)))
