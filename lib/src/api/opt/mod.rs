@@ -176,7 +176,7 @@ fn into_json(value: Value, simplify: bool) -> JsonValue {
 		fn from((obj, simplify): (sql::Object, bool)) -> Self {
 			let mut map = Map::with_capacity(obj.0.len());
 			for (key, value) in obj.0 {
-				map.insert(key.to_owned(), into_json(value, simplify));
+				map.insert(key.to_owned(), into_json(value, true));
 			}
 			Self(map)
 		}
