@@ -106,7 +106,18 @@ pub fn whats(i: &str) -> IResult<&str, Values> {
 	Ok((i, Values(v)))
 }
 
-#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Serialize, Deserialize, Store, Hash)]
+#[derive(
+	derive_more::Display,
+	Clone,
+	Debug,
+	Default,
+	PartialEq,
+	PartialOrd,
+	Serialize,
+	Deserialize,
+	Store,
+	Hash,
+)]
 #[serde(rename = "$surrealdb::private::sql::Value")]
 #[revisioned(revision = 1)]
 pub enum Value {
@@ -2518,42 +2529,42 @@ impl Value {
 	}
 }
 
-impl fmt::Display for Value {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		let mut f = Pretty::from(f);
-		match self {
-			Value::None => write!(f, "NONE"),
-			Value::Null => write!(f, "NULL"),
-			Value::Array(v) => write!(f, "{v}"),
-			Value::Block(v) => write!(f, "{v}"),
-			Value::Bool(v) => write!(f, "{v}"),
-			Value::Bytes(v) => write!(f, "{v}"),
-			Value::Cast(v) => write!(f, "{v}"),
-			Value::Constant(v) => write!(f, "{v}"),
-			Value::Datetime(v) => write!(f, "{v}"),
-			Value::Duration(v) => write!(f, "{v}"),
-			Value::Edges(v) => write!(f, "{v}"),
-			Value::Expression(v) => write!(f, "{v}"),
-			Value::Function(v) => write!(f, "{v}"),
-			Value::MlModel(v) => write!(f, "{v}"),
-			Value::Future(v) => write!(f, "{v}"),
-			Value::Geometry(v) => write!(f, "{v}"),
-			Value::Idiom(v) => write!(f, "{v}"),
-			Value::Mock(v) => write!(f, "{v}"),
-			Value::Number(v) => write!(f, "{v}"),
-			Value::Object(v) => write!(f, "{v}"),
-			Value::Param(v) => write!(f, "{v}"),
-			Value::Range(v) => write!(f, "{v}"),
-			Value::Regex(v) => write!(f, "{v}"),
-			Value::Strand(v) => write!(f, "{v}"),
-			Value::Query(v) => write!(f, "{v}"),
-			Value::Subquery(v) => write!(f, "{v}"),
-			Value::Table(v) => write!(f, "{v}"),
-			Value::Thing(v) => write!(f, "{v}"),
-			Value::Uuid(v) => write!(f, "{v}"),
-		}
-	}
-}
+// impl fmt::Display for Value {
+// 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+// 		// let mut f = Pretty::from(f);
+// 		match self {
+// 			Value::None => write!(f, "NONE"),
+// 			Value::Null => write!(f, "NULL"),
+// 			Value::Array(v) => write!(f, "{v}"),
+// 			Value::Block(v) => write!(f, "{v}"),
+// 			Value::Bool(v) => write!(f, "{v}"),
+// 			Value::Bytes(v) => write!(f, "{v}"),
+// 			Value::Cast(v) => write!(f, "{v}"),
+// 			Value::Constant(v) => write!(f, "{v}"),
+// 			Value::Datetime(v) => write!(f, "{v}"),
+// 			Value::Duration(v) => write!(f, "{v}"),
+// 			Value::Edges(v) => write!(f, "{v}"),
+// 			Value::Expression(v) => write!(f, "{v}"),
+// 			Value::Function(v) => write!(f, "{v}"),
+// 			Value::MlModel(v) => write!(f, "{v}"),
+// 			Value::Future(v) => write!(f, "{v}"),
+// 			Value::Geometry(v) => write!(f, "{v}"),
+// 			Value::Idiom(v) => write!(f, "{v}"),
+// 			Value::Mock(v) => write!(f, "{v}"),
+// 			Value::Number(v) => write!(f, "{v}"),
+// 			Value::Object(v) => write!(f, "{v}"),
+// 			Value::Param(v) => write!(f, "{v}"),
+// 			Value::Range(v) => write!(f, "{v}"),
+// 			Value::Regex(v) => write!(f, "{v}"),
+// 			Value::Strand(v) => write!(f, "{v}"),
+// 			Value::Query(v) => write!(f, "{v}"),
+// 			Value::Subquery(v) => write!(f, "{v}"),
+// 			Value::Table(v) => write!(f, "{v}"),
+// 			Value::Thing(v) => write!(f, "{v}"),
+// 			Value::Uuid(v) => write!(f, "{v}"),
+// 		}
+// 	}
+// }
 
 impl Value {
 	/// Check if we require a writeable transaction
