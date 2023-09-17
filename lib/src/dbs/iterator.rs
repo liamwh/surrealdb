@@ -127,13 +127,15 @@ impl Iterator {
 					// Check if there is an id field specified
 					if let Some(id) = data.rid(ctx, opt, txn).await? {
 						// Check to see the type of the id
+						dbg!(&id);
 						match id {
 							// The id is a match, so don't error
 							Value::Thing(id) if id == v => (),
 							// The id does not match
 							id => {
-								return Err(Error::IdMismatch {
+								return Err(Error::IdMismatch2 {
 									value: id.to_string(),
+									value2: v.to_string(),
 								});
 							}
 						}

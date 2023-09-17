@@ -502,6 +502,13 @@ pub enum Error {
 	IdMismatch {
 		value: String,
 	},
+	///
+	/// Found a record id for the record but we are creating a specific record
+	#[error("Found {value} for the id field, but a specific record has been specified: {value2}")]
+	IdMismatch2 {
+		value: String,
+		value2: String,
+	},
 
 	/// Found a record id for the record but this is not a valid id
 	#[error("Found {value} for the Record ID but this is not a valid id")]
