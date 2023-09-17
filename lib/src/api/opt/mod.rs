@@ -423,7 +423,7 @@ pub(crate) fn from_value<T>(value: Value) -> Result<T, Error>
 where
 	T: DeserializeOwned + std::fmt::Debug,
 {
-	let surreal_json = into_json(value.clone(), false);
+	let surreal_json = into_json(value.clone(), true);
 	let serde_json = json!(value.clone());
 	tracing::info!(?value);
 	tracing::info!(?surreal_json);
@@ -437,6 +437,7 @@ where
 #[cfg(test)]
 mod tests {
 	mod into_json {
+		use crate::api::err::Error;
 		use crate::opt::from_value;
 		use crate::opt::into_json;
 		use crate::sql;
@@ -453,6 +454,7 @@ mod tests {
 		use geo::Point;
 		use geo::Polygon;
 		use rust_decimal::Decimal;
+		use serde::Deserialize;
 		use serde_json::json;
 		use std::collections::BTreeMap;
 		use std::time::Duration;
@@ -637,6 +639,26 @@ mod tests {
 				assert_eq!(json, json!(map));
 
 				let response: BTreeMap<String, bool> = from_value(value).unwrap();
+				assert_eq!(response, map);
+			}
+		}
+
+		#[test]
+		fn object_works_with_id_field() {
+			for map in [BTreeMap::new(), map!("id".to_owned() => "123".to_string())] {
+				let value = Value::Object(sql::Object(
+					map.iter()
+						.map(|(key, value)| (key.clone(), Value::from(value.clone())))
+						.collect(),
+				));
+
+				let simple_json = into_json(value.clone(), true);
+				assert_eq!(simple_json, json!(map));
+
+				let json = into_json(value.clone(), false);
+				assert_eq!(json, json!(map));
+
+				let response: BTreeMap<String, String> = from_value(value).unwrap();
 				assert_eq!(response, map);
 			}
 		}
